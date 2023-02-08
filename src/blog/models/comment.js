@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { uuid, jsonSchema } = require("uuidv4");
+const { v4: uuidv4 } = require("uuid");
 
 const commentSchema = new mongoose.Schema({
   content: {
@@ -11,14 +11,13 @@ const commentSchema = new mongoose.Schema({
     default: Date.now,
   },
   id: {
-    require: true,
-    type: jsonSchema.v4.type,
-    unique: true,
+    type: String,
+    default: uuidv4,
   },
-  post: {
-    type: jsonSchema.v4.type,
+  id_post: {
+    type: String,
     ref: "Post",
   },
 });
 
-module.exports = Comment = mongoose.model("Comment", commentSchema);
+module.exports = mongoose.model("Comment", commentSchema);
