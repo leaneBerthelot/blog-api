@@ -1,29 +1,27 @@
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 
-const postSchema = new mongoose.Schema({
-  commentsCount: {
-    type: Number,
-    default: 0,
+const baseSchema = new mongoose.Schema({
+  avatar: {
+    type: String,
   },
-  content: {
+  bio: {
     type: String,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  email: {
+    type: String,
+  },
   id: {
     type: String,
     default: uuidv4,
   },
-  title: {
+  username: {
     type: String,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Post", postSchema);
+module.exports = mongoose.model("Profile", baseSchema);

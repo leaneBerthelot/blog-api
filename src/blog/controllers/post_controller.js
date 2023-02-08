@@ -1,19 +1,33 @@
 const Post = require("../models/post");
-const { uuid } = require("uuidv4");
-const { removeFields } = require("../../../utils/remover");
+
 const RESPONSE_MESSAGES = require("../../../__constants__/response_messages");
+
+const { getUrl } = require("../../../utils/getter");
+const { removeFields } = require("../../../utils/remover");
 
 const createPost = async (req, res) => {
   const post = new Post(req.body);
 
   try {
-    post.id = uuid();
     await post.save();
 
-    res.header("Location", `http://localhost:3000/blog/posts/${post.id}`);
+    res.header("Location", getUrl(req, post.id));
     res.status(201).json(post);
   } catch (err) {
     res.status(500).send(err.message);
+  }
+};
+
+const deletePost = async (req, res) => {
+  try {
+    await Promise.all([
+      Post.deleteOne({ id: req.post.id }),
+      Comment.deleteMany({ post: req.params.id }),
+    ]);
+
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
   }
 };
 
@@ -42,16 +56,6 @@ const getById = async (req, res) => {
   }
 };
 
-const deletePost = async (req, res) => {
-  try {
-    await Promise.all([Post.deleteOne({ id: req.post.id }), Comment.deleteMany({ post: req.params.id })]);
-
-    res.status(204).end();
-  } catch (err) {
-    res.status(500).json({ msg: err.message });
-  }
-};
-
 const updatePost = async (req, res) => {
   const { id } = req.params;
 
@@ -64,9 +68,9 @@ const updatePost = async (req, res) => {
     const post = await Post.findOneAndUpdate({ id }, update, {
       new: true,
       runValidators: true,
-    }).lean();
+    }).exec();
 
-    res.header("Location", `http://localhost:3000/blog/posts/${req.params.id}`);
+    res.header("Location", getUrl(req, post.id));
     res.status(200).json(removeFields(post));
   } catch (err) {
     res.status(500).json({ msg: err.message });
@@ -74,9 +78,9 @@ const updatePost = async (req, res) => {
 };
 
 module.exports = {
-  getAll,
-  getById,
   createPost,
   deletePost,
+  getAll,
+  getById,
   updatePost,
 };

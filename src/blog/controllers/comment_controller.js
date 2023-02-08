@@ -1,7 +1,8 @@
 const Comment = require("../models/comment");
 const Post = require("../models/post");
 
-const { uuid } = require("uuidv4");
+const { getUrl } = require("../../../utils/getter");
+
 const createComment = async (req, res) => {
   const { id } = req.params;
 
@@ -9,10 +10,10 @@ const createComment = async (req, res) => {
     const comment = new Comment({ ...req.body, post: id });
 
     req.post.commentsCount++;
-    comment.id = uuid();
 
     await Promise.all([req.post.save(), comment.save()]);
 
+    res.header("Location", getUrl(req, comment.id));
     res.status(201).json({ msg: "Create comment" });
   } catch (err) {
     res.status(500).json({ msg: err.message });
@@ -26,7 +27,7 @@ const deleteComment = async (req, res) => {
       return res.status(404).json({ msg: "Comment not found" });
     }
 
-    const post = await Post.findOne({ id: comment.post }).exec();
+    const post = await Post.findOne({ id: comment.post });
     post.commentsCount--;
     await post.save();
 
