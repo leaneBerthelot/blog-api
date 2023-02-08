@@ -12,7 +12,7 @@ const createPost = async (req, res) => {
     await post.save();
 
     res.header("Location", getUrl(req, post.id));
-    res.status(201).json(post);
+    res.status(201).json({ post: removeFields(post.toObject()) });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -35,7 +35,7 @@ const getAll = async (req, res) => {
   try {
     const posts = await Post.find({}).lean().exec();
 
-    res.status(200).json(removeFields(posts));
+    res.status(200).json({ posts: removeFields(posts) });
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
@@ -68,10 +68,12 @@ const updatePost = async (req, res) => {
     const post = await Post.findOneAndUpdate({ id }, update, {
       new: true,
       runValidators: true,
-    }).exec();
+    })
+      .lean()
+      .exec();
 
-    res.header("Location", getUrl(req, post.id));
-    res.status(200).json(removeFields(post));
+    res.header("Location", getUrl(req, id));
+    res.status(200).json({ post: removeFields(post) });
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
