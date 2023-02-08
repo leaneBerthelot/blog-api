@@ -32,16 +32,29 @@ const deletePost = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-    try {
-        const posts = await Post.find({}).lean().exec();
+    const { page = 1, limit = 10 } = req.query;
 
-        res.status(200).json({ posts: removeFields(posts) });
+    try {
+        const posts = await Post.find()
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .lean()
+            .exec();
+
+        const count = await Post.find().count();
+
+        res.status(200).json({
+            posts: removeFields(posts),
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(count / limit),
+        });
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
 };
 
 const getById = async (req, res) => {
+
     try {
         const post = await Post.findOne({ id: req.post.id }).lean().exec();
         if (!post) {
