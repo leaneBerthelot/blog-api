@@ -1,11 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const Post = require("./models/post");
-
-const RESPONSE_MESSAGES = require("../../__constants__/response_messages");
-
-const { _lengthValidator } = require("./validator");
 const {
   createPost,
   deletePost,
@@ -13,11 +8,17 @@ const {
   getById,
   updatePost,
 } = require("./controllers/post_controller");
+
 const {
   createComment,
   deleteComment,
   getAllComments,
 } = require("./controllers/comment_controller");
+
+const {
+  postExistsMiddleware,
+  contentBodyMiddleware,
+} = require("./middlewares");
 
 router.use((req, res, next) => {
   delete req.body.id;
@@ -26,59 +27,28 @@ router.use((req, res, next) => {
   next();
 });
 
-const postExistsMiddleware = async function (req, res, next) {
-  const post = await Post.findOne({ id: req.params.id });
-  if (!post) {
-    return res.status(404).json({ msg: RESPONSE_MESSAGES.POST_NOT_FOUND });
-  }
-
-  req.post = post;
-
-  next();
-};
-
-const contentBodyMiddleware = function (req, res, next) {
-  const content = req.body.content;
-
-  if (!content) {
-    return res.status(400).json({ msg: "content is required" });
-  }
-
-  if (!_lengthValidator(content, 10, 200)) {
-    return res
-      .status(400)
-      .json({ msg: RESPONSE_MESSAGES.INVALID_POST_BODY_LENGTH(10, 200) });
-  }
-
-  next();
-};
-
-// @route   GET api/blog/posts
+// @route   GET /blog/posts
 router.get("/posts", getAll);
 
-// @route   GET api/blog/posts/:id
-router.get("/posts/:id", getById);
+// @route   GET /blog/posts/:id
+router.get("/posts/:id", postExistsMiddleware, getById);
 
-// @route   POST api/blog/posts
+// @route   POST /blog/posts
 router.post("/posts", contentBodyMiddleware, createPost);
 
-router.patch(
-  "/posts/:id",
-  postExistsMiddleware,
-  contentBodyMiddleware,
-  updatePost
-);
+// @route   PUT /blog/posts/:id
+router.patch("/posts/:id", postExistsMiddleware, contentBodyMiddleware, updatePost);
 
+// @route   DELETE api/blog/posts/:id
 router.delete("/posts/:id", postExistsMiddleware, deletePost);
 
-// COMMENT
-// @route   GET api/blog/posts/:id/comments
+// @route   GET /blog/posts/:id/comments
 router.get("/posts/:id/comments", postExistsMiddleware, getAllComments);
 
-// @route   POST api/blog/posts/:id/comments
+// @route   POST /blog/posts/:id/comments
 router.post("/posts/:id/comments", postExistsMiddleware, createComment);
 
-// @route   DELETE api/blog/comments/:commentId
+// @route   DELETE /blog/comments/:commentId
 router.delete("/comments/:id", deleteComment);
 
 module.exports = router;

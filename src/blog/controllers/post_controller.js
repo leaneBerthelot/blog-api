@@ -42,10 +42,8 @@ const getAll = async (req, res) => {
 };
 
 const getById = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const post = await Post.findOne({ id: id }).lean().exec();
+    const post = await Post.findOne({ id: req.post.id }).lean().exec();
     if (!post) {
       return res.status(404).json({ msg: RESPONSE_MESSAGES.POST_NOT_FOUND });
     }
@@ -68,9 +66,7 @@ const updatePost = async (req, res) => {
     const post = await Post.findOneAndUpdate({ id }, update, {
       new: true,
       runValidators: true,
-    })
-      .lean()
-      .exec();
+    }).lean().exec();
 
     res.header("Location", getUrl(req, id));
     res.status(200).json({ post: removeFields(post) });
