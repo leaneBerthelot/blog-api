@@ -2,29 +2,29 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createPost,
-  deletePost,
-  getAll,
-  getById,
-  updatePost,
+    createPost,
+    deletePost,
+    getAll,
+    getById,
+    updatePost,
 } = require("./controllers/post_controller");
 
 const {
-  createComment,
-  deleteComment,
-  getAllComments,
+    createComment,
+    deleteComment,
+    getAllComments,
 } = require("./controllers/comment_controller");
 
 const {
-  postExistsMiddleware,
-  contentBodyMiddleware,
+    postExistsMiddleware,
+    contentBodyMiddleware,
 } = require("./middlewares");
 
 router.use((req, res, next) => {
-  delete req.body.id;
-  delete req.body.__v;
+    delete req.body.id;
+    delete req.body.__v;
 
-  next();
+    next();
 });
 
 // @route   GET /blog/posts
@@ -37,7 +37,12 @@ router.get("/posts/:id", postExistsMiddleware, getById);
 router.post("/posts", contentBodyMiddleware, createPost);
 
 // @route   PUT /blog/posts/:id
-router.patch("/posts/:id", postExistsMiddleware, contentBodyMiddleware, updatePost);
+router.patch(
+    "/posts/:id",
+    postExistsMiddleware,
+    contentBodyMiddleware,
+    updatePost
+);
 
 // @route   DELETE api/blog/posts/:id
 router.delete("/posts/:id", postExistsMiddleware, deletePost);

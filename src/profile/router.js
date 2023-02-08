@@ -2,23 +2,19 @@ const router = require("express").Router();
 
 const { createProfile } = require("./controllers/profile_controller");
 
-router.get("/", (req, res) => {
-  res.json("Get owner profile");
-});
+// @route   GET /
+router.get("/", (req, res) => {});
 
 // @route   POST /
 router.post("/", createProfile);
 
-router.get("/:id", (req, res) => {
-  res.json("Get profile by id");
-});
+// @route   GET /:id
+router.get("/:id", (req, res) => {});
 
-router.get("/:id/posts", (req, res) => {
-  res.json("Get posts");
-});
+// @route   GET /:id/posts
+router.get("/:id/posts", (req, res) => {});
 
-router.get("/:id/comments", (req, res) => {
-  res.json("Get comments");
-});
+// @route   GET /:id/comments
+router.get("/:id/comments", (req, res) => {});
 
 module.exports = router;
