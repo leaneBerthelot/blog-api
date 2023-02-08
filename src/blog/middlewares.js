@@ -1,6 +1,6 @@
 const Post = require("./models/post");
 const RESPONSE_MESSAGES = require("../../__constants__/response_messages");
-const {_lengthValidator} = require("./validator");
+const { _lengthValidator } = require("./validator");
 
 const postExistsMiddleware = async function (req, res, next) {
     const post = await Post.findOne({ id: req.params.id });
@@ -32,4 +32,4 @@ const contentBodyMiddleware = function (req, res, next) {
 module.exports = {
     contentBodyMiddleware,
     postExistsMiddleware,
-}
+};
