@@ -28,6 +28,7 @@ const getAll = async (req, res) => {
 
 const getById = async (req, res) => {
     const { id } = req.params;
+
     try {
         const post = await Post.findOne({ id: id }).lean().exec();
         if (!post) {

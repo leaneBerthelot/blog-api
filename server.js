@@ -8,9 +8,18 @@ db.connect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/account', require('./src/account/router'));
-app.use('/blog', require('./src/blog/router'));
-app.use('/profile', require('./src/profile/router'));
+const routes = [
+    { path: "/account", router: require("./src/account/router") },
+    { path: "/blog", router: require("./src/blog/router") },
+    { path: "/profile", router: require("./src/profile/router") }
+];
+
+
+routes.forEach(route => {
+    app.use(route.path, route.router);
+
+    console.log(`Route ${route.path} loaded`);
+});
 
 app.listen(port, () => {
     console.log(`Server is listening on port http://localhost:${port}`);
