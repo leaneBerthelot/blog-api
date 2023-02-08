@@ -1,17 +1,17 @@
-const removeFields = function (val) {
-  if (val) {
-    delete val._id;
-    delete val.__v;
+const removeFields = function (value) {
+  if (value) {
+    delete value._id;
+    delete value.__v;
   }
 
-  if (val instanceof Array) {
-    Array.prototype.forEach.call(val, (post) => {
-      delete post._id;
-      delete post.__v;
+  if (value instanceof Array) {
+    Array.prototype.forEach.call(value, (val) => {
+      delete val._id;
+      delete val.__v;
     });
   }
 
-  return val;
+  return value;
 };
 
 module.exports = {

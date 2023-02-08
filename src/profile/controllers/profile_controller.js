@@ -2,6 +2,7 @@ const Person = require("../models/person");
 const Company = require("../models/company");
 
 const { getUrl } = require("../../../utils/getter");
+const { removeFields } = require("../../../utils/remover");
 
 const createProfile = async (req, res) => {
   const { kind, ...body } = req.body;
@@ -22,7 +23,7 @@ const createProfile = async (req, res) => {
     await profile.save();
 
     res.header("Location", getUrl(req, profile.id));
-    res.status(201).json(profile);
+    res.status(201).json(removeFields(profile.toObject()));
   } catch (err) {
     res.status(500).json({ msg: err });
   }

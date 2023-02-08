@@ -1,4 +1,5 @@
 const router = require("express").Router();
+
 const { createProfile } = require("./controllers/profile_controller");
 
 router.get("/", (req, res) => {
