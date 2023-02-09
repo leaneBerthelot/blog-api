@@ -43,10 +43,21 @@ const deleteComment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     const { id } = req.params;
+    const { page = 1, limit = 10 } = req.query;
 
-    const comments = await Comment.find({ id_post: id }).lean().exec();
+    const comments = await Comment.find({ id_post: id })
+        .limit(limit)
+        .skip((page - 1) * limit)
+        .lean()
+        .exec();
 
-    res.status(200).json({ comments: removeFields(comments) });
+    const count = await Comment.find({ id_post: id }).count();
+
+    res.status(200).json({
+        comments: removeFields(comments),
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(count / limit),
+    });
 };
 
 module.exports = {
