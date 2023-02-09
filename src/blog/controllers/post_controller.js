@@ -23,10 +23,7 @@ const createPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try {
-        await Promise.all([
-            Post.deleteOne({ id: req.post.id }),
-            Comment.deleteMany({ post: req.params.id }),
-        ]);
+        await Promise.all([Post.deleteOne({ id: req.post.id }), Comment.deleteMany({ post: req.params.id })]);
 
         res.status(204).end();
     } catch (err) {
@@ -62,9 +59,7 @@ const getById = async (req, res) => {
     try {
         const post = await Post.findOne({ id: id }).lean().exec();
         if (!post) {
-            return res
-                .status(404)
-                .json({ msg: RESPONSE_MESSAGES.POST_NOT_FOUND });
+            return res.status(404).json({ msg: RESPONSE_MESSAGES.POST_NOT_FOUND });
         }
 
         res.status(200).json(removeFields(post));

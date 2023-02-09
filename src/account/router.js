@@ -2,11 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const authenticate = require("../../middlewares/authenticate");
-const {
-    deleteAccount,
-    login,
-    register,
-} = require("./controllers/account_controller");
+const { deleteAccount, login, register } = require("./controllers/account_controller");
 
 router.post("/login", login);
 

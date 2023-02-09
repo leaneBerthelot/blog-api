@@ -21,9 +21,7 @@ const contentBodyMiddleware = function (req, res, next) {
     }
 
     if (!_lengthValidator(content, 10, 200)) {
-        return res
-            .status(400)
-            .json({ msg: RESPONSE_MESSAGES.INVALID_POST_BODY_LENGTH(10, 200) });
+        return res.status(400).json({ msg: RESPONSE_MESSAGES.INVALID_POST_BODY_LENGTH(10, 200) });
     }
 
     next();
