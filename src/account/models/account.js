@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 
 const accountSchema = new mongoose.Schema({
     id: {
@@ -44,6 +45,23 @@ accountSchema.methods.comparePassword = function (candidatePassword, callback) {
         if (err) return callback(err);
         callback(null, isMatch);
     });
+};
+
+accountSchema.methods.generateJwt = function () {
+    const today = new Date();
+    const exp = new Date(today);
+    exp.setDate(today.getDate() + 7);
+
+    return jwt.sign(
+        {
+            id: this.id,
+            email: this.email,
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: process.env.JWT_EXPIRES_IN,
+        }
+    );
 };
 
 module.exports = mongoose.model("Account", accountSchema);

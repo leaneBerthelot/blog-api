@@ -27,16 +27,6 @@ const createProfile = async (req, res) => {
     } catch (err) {
         res.status(500).json({ msg: err });
     }
-
-    // profile
-    //     .save()
-    //     .then((doc) => {
-    //       res.header("Location", getUrl(req, doc.id));
-    //       res.status(201).json(doc);
-    //     })
-    //     .catch((err) => {
-    //       res.status(500).json({ msg: err });
-    //     });
 };
 
 module.exports = {

@@ -1,72 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const Account = require("./models/account");
 
-const { getUrl } = require("../../utils/getter");
-const { emailValidator, passwordValidator } = require("./validators");
+const authenticate = require("../../middlewares/authenticate");
+const {
+    deleteAccount,
+    login,
+    register,
+} = require("./controllers/account_controller");
 
-// @route   POST /account/login
-router.post("/login", async (req, res) => {
+router.post("/login", login);
+
+router.post("/register", register);
+router.get("/verify", authenticate, (req, res) => {
+    res.status(200).json({ id: req.id, email: req.email });
+});
+router.post("/forgot-password", (req, res) => {
     const { email, password } = req.body;
 
-    await new Promise((resolve) =>
-        setTimeout(resolve, Math.random() * 1000)
-    );
+    try {
+        res.json("Forgot");
+    } catch (err) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+router.post("/reset-password", (req, res) => {
+    const { email, password } = req.body;
 
     try {
-        const account = await Account.findOne({ email: email });
-
-        if (!account) {
-            return res.status(400).json({ error: "Email and password are invalid" });
-        }
-
-        account.comparePassword(password, (err, isMatch) => {
-            if (err || !isMatch) {
-                return res.status(400).json({ error: "Email and password are invalid" });
-            }
-
-            return res.status(200).json({ id: account.id, email: account.email });
-        });
+        res.json("Reset password");
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+router.post("/change-password", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        res.json("Change");
+    } catch (err) {
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
-// @route   POST /account/register
-// @body    {email, password}
-router.post("/register", async (req, res) => {
-    const { email, password } = req.body;
-
-    if(!email || !password) {
-        return res.status(400).json({ error: "Email and password are required" });
-    }
-
-    if(!emailValidator(email)) {
-        return res.status(400).json({ error: "Email is invalid" });
-    }
-
-    if(!passwordValidator(password)) {
-        return res.status(400).json({ error: "Password is invalid" });
-    }
-
-    const exists = await Account.findOne({ email: email });
-    if(exists) {
-        return res.status(400).json({ error: "Email already exists" });
-    }
-    
-    const account = new Account({
-        email: email,
-        password: password,
-    });
-
-    try {
-        await account.save();
-
-        res.header("Location", getUrl(req, account.id));
-        res.status(201).json({ id: account.id, email: account.email });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+router.delete("/delete", deleteAccount);
 
 module.exports = router;

@@ -20,6 +20,10 @@ const baseSchema = new mongoose.Schema(
             type: String,
             default: uuidv4,
         },
+        // ⚠️
+        owner: {
+            type: String,
+        },
         username: {
             type: String,
         },

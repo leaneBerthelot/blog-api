@@ -6,7 +6,10 @@ const { getUrl } = require("../../../utils/getter");
 const { removeFields } = require("../../../utils/remover");
 
 const createPost = async (req, res) => {
-    const post = new Post(req.body);
+    const post = new Post({
+        title: req.body.title,
+        content: req.body.content,
+    });
 
     try {
         await post.save();
@@ -54,9 +57,10 @@ const getAll = async (req, res) => {
 };
 
 const getById = async (req, res) => {
+    const { id } = req.params;
 
     try {
-        const post = await Post.findOne({ id: req.post.id }).lean().exec();
+        const post = await Post.findOne({ id: id }).lean().exec();
         if (!post) {
             return res
                 .status(404)
@@ -73,7 +77,8 @@ const updatePost = async (req, res) => {
     const { id } = req.params;
 
     const update = {
-        ...req.body,
+        title: req.body.title,
+        content: req.body.content,
         updatedAt: Date.now(),
     };
 

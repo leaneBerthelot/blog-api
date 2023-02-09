@@ -1,4 +1,5 @@
 const express = require("express");
+const authenticate = require("./middlewares/authenticate");
 require("dotenv").config();
 require("./db").connect();
 
@@ -9,15 +10,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const routes = [
-    { path: "/account", router: require("./src/account/router") },
-    { path: "/blog", router: require("./src/blog/router") },
-    { path: "/profile", router: require("./src/profile/router") },
+    {
+        path: "/account",
+        router: require("./src/account/router"),
+        secure: false,
+    },
+    { path: "/blog", router: require("./src/blog/router"), secure: true },
+    { path: "/profile", router: require("./src/profile/router"), secure: true },
 ];
 
 routes.forEach((route) => {
-    app.use(route.path, route.router);
+    if (route.secure) {
+        return app.use(route.path, authenticate, route.router);
+    }
 
-    console.log(`Route ${route.path} loaded`);
+    app.use(route.path, route.router);
 });
 
 app.listen(port, () => {
