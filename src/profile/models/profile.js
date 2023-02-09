@@ -30,7 +30,7 @@ const baseSchema = new mongoose.Schema(
     },
     {
         discriminatorKey: "kind",
-    }
+    },
 );
 
 module.exports = mongoose.model("Profile", baseSchema);

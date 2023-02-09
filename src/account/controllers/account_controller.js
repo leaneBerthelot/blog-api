@@ -26,25 +26,19 @@ const login = async (req, res) => {
         const account = await Account.findOne({ email: email });
 
         if (!account) {
-            return res
-                .status(400)
-                .json({ error: "Email and password are invalid" });
+            return res.status(400).json({ error: "Email and password are invalid" });
         }
 
         account.comparePassword(password, (err, isMatch) => {
             if (err || !isMatch) {
-                return res
-                    .status(400)
-                    .json({ error: "Email and password are invalid" });
+                return res.status(400).json({ error: "Email and password are invalid" });
             }
 
-            return res
-                .status(200)
-                .json({
-                    id: account.id,
-                    email: account.email,
-                    token: account.generateJwt(),
-                });
+            return res.status(200).json({
+                id: account.id,
+                email: account.email,
+                token: account.generateJwt(),
+            });
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -55,9 +49,7 @@ const register = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res
-            .status(400)
-            .json({ error: "Email and password are required" });
+        return res.status(400).json({ error: "Email and password are required" });
     }
 
     if (!emailValidator(email)) {
