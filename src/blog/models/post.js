@@ -17,12 +17,16 @@ const postSchema = new mongoose.Schema({
         type: String,
         default: uuidv4,
     },
+    // TODO
+    owner: {
+        type: String,
+        ref : "Profile",
+    },
     title: {
         type: String,
     },
     updatedAt: {
         type: Date,
-        default: Date.now,
     },
 });
 

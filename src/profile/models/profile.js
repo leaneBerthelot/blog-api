@@ -20,9 +20,13 @@ const baseSchema = new mongoose.Schema(
             type: String,
             default: uuidv4,
         },
-        // ⚠️
+        // TODO
         owner: {
             type: String,
+            ref: "Account",
+        },
+        updatedAt: {
+          type: Date,
         },
         username: {
             type: String,

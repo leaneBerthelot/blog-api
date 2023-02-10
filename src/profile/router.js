@@ -8,13 +8,16 @@ router.get("/", (req, res) => {});
 // @route   POST /
 router.post("/", createProfile);
 
-// @route   GET /:id
+// TODO
+router.patch("/", (req, res) => {});
+
+// TODO
 router.get("/:id", (req, res) => {});
 
-// @route   GET /:id/posts
+// TODO
 router.get("/:id/posts", (req, res) => {});
 
-// @route   GET /:id/comments
+// TODO
 router.get("/:id/comments", (req, res) => {});
 
 module.exports = router;

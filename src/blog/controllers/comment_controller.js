@@ -8,6 +8,7 @@ const createComment = async (req, res) => {
     const { id } = req.params;
 
     try {
+        //TODO
         const comment = new Comment({ ...req.body, id_post: id });
 
         req.post.commentsCount++;
