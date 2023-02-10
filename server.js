@@ -22,20 +22,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-    res.send("<button><a href='/auth/google'>Login With Google</a></button>");
-});
-
 const routes = [
     { path: "/auth", router: require("./src/auth_providers/router") },
     { path: "/account", router: require("./src/account/router") },
     { path: "/blog", router: require("./src/blog/router"), secure: true },
     { path: "/profile", router: require("./src/profile/router"), secure: true },
 ];
-
-app.get("/", (req, res) => {
-    res.send("<button><a href='/auth/google'>Login With Google</a></button>");
-});
 
 routes.forEach((route) => {
     if (route.secure) {

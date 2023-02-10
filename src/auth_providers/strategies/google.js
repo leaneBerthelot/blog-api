@@ -16,6 +16,7 @@ router.get(
 
 router.get("/callback/success", async (req, res) => {
     if (!req.user) res.redirect("/auth/google/callback/failure");
+
     let account;
     let status = 200;
 
