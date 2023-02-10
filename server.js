@@ -1,7 +1,10 @@
 const express = require("express");
+const passport = require("passport");
 const authenticate = require("./middlewares/authenticate");
+const cookieSession = require("cookie-session");
 require("dotenv").config();
 require("./db").connect();
+require("./src/auth_providers/passport");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,17 +12,30 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-    delete req.body.id;
+app.use(
+    cookieSession({
+        name: "google-auth-session",
+        keys: ["key1", "key2"],
+    }),
+);
 
-    next();
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get("/", (req, res) => {
+    res.send("<button><a href='/auth/google'>Login With Google</a></button>");
 });
 
 const routes = [
+    { path: "/auth", router: require("./src/auth_providers/router") },
     { path: "/account", router: require("./src/account/router") },
     { path: "/blog", router: require("./src/blog/router"), secure: true },
     { path: "/profile", router: require("./src/profile/router"), secure: true },
 ];
+
+app.get("/", (req, res) => {
+    res.send("<button><a href='/auth/google'>Login With Google</a></button>");
+});
 
 routes.forEach((route) => {
     if (route.secure) {
