@@ -12,9 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     delete req.body.id;
 
-    if (req.headers["x-api-key"] !== process.env.API_KEY) {
-        return res.status(401).json({ msg: "Invalid API key" });
-    }
+    next();
 });
 
 const routes = [
