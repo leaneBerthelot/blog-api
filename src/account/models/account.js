@@ -18,6 +18,10 @@ const accountSchema = new mongoose.Schema({
     password: {
         type: String,
     },
+    profileCount: {
+        type: Number,
+        default: 0,
+    },
     provider: {
         type: String,
         default: "local",

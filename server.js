@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-const authenticate = require("./middlewares/authenticate");
+const authenticateMiddleware = require("./middlewares/authenticate");
 const cookieSession = require("cookie-session");
 require("dotenv").config();
 require("./db").connect();
@@ -31,7 +31,7 @@ const routes = [
 
 routes.forEach((route) => {
     if (route.secure) {
-        return app.use(route.path, authenticate, route.router);
+        return app.use(route.path, authenticateMiddleware, route.router);
     }
 
     app.use(route.path, route.router);

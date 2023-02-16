@@ -1,23 +1,28 @@
 const router = require("express").Router();
 
-const { createProfile } = require("./controllers/profile_controller");
+const { createProfile, getMyProfiles, getById, getProfilePosts, getProfileComments, updateProfile, deleteProfile } = require("./controllers/profile_controller");
 
-// @route   GET /
-router.get("/", (req, res) => {});
+const { isOwnerMiddleware, profileExistMiddleware, numberAccountMiddleware } = require("./middleware");
 
-// @route   POST /
-router.post("/", createProfile);
+// @route   GET /profile
+router.get("/", getMyProfiles);
 
-// TODO
-router.patch("/", (req, res) => {});
+// @route   POST /profile
+router.post("/", numberAccountMiddleware, createProfile);
 
-// TODO
-router.get("/:id", (req, res) => {});
+// @route PATCH /profile/:id
+router.patch("/:id", profileExistMiddleware, isOwnerMiddleware, updateProfile);
 
-// TODO
-router.get("/:id/posts", (req, res) => {});
+// @route DELETE /profile/:id
+router.delete("/:id", profileExistMiddleware, isOwnerMiddleware, deleteProfile);
 
-// TODO
-router.get("/:id/comments", (req, res) => {});
+// @route   GET /profile/:id
+router.get("/:id", profileExistMiddleware, getById);
+
+// @route   GET /profile/:id/posts
+router.get("/:id/posts", profileExistMiddleware, getProfilePosts);
+
+// @route   GET /profile/:id/comments
+router.get("/:id/comments", profileExistMiddleware, getProfileComments);
 
 module.exports = router;

@@ -1,17 +1,28 @@
 const Account = require("../models/account");
+const Comment = require("../../../src/blog/models/comment");
+const Profile = require("../../profile/models/profile");
+const Post = require("../../../src/blog/models/post");
+
 const { emailValidator, passwordValidator } = require("../validators");
 const { getUrl } = require("../../../utils/getter");
 
 const deleteAccount = async (req, res) => {
-    const { email } = req.body;
-
     try {
-        const account = await Account.findOneAndDelete({ email });
+        const profiles = await Profile.find({ owner: req.account });
+
+        await Promise.all(
+            profiles.map(async (profile) => {
+                await Promise.all([Comment.deleteMany({ owner: profile.id }), Post.deleteMany({ owner: profile.id }), Profile.findOneAndDelete({ id: profile.id })]);
+            }),
+        );
+
+        const account = await Account.findOneAndDelete({ id: req.account });
+
         if (!account) {
             res.status(404).json({ error: "Account not found" });
         }
 
-        res.status(204).end();
+        res.status(200).json({ msg: "account deleted" });
     } catch (err) {
         res.status(500).json({ error: "Internal server error" });
     }

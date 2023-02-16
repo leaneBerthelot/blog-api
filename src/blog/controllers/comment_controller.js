@@ -8,7 +8,6 @@ const createComment = async (req, res) => {
     const { id } = req.params;
 
     try {
-        //TODO
         const comment = new Comment({ ...req.body, id_post: id });
 
         req.post.commentsCount++;
@@ -36,7 +35,7 @@ const deleteComment = async (req, res) => {
 
         await post.save();
 
-        res.status(204).end();
+        res.status(204).json("Post deleted");
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }

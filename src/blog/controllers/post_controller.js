@@ -1,16 +1,14 @@
 const Post = require("../models/post");
+const Comment = require("../models/comment");
 
 const RESPONSE_MESSAGES = require("../../../__constants__/response_messages");
 
 const { getUrl } = require("../../../utils/getter");
 const { removeFields } = require("../../../utils/remover");
+const { post } = require("../router");
 
 const createPost = async (req, res) => {
-    //TODO
-    const post = new Post({
-        title: req.body.title,
-        content: req.body.content,
-    });
+    const post = new Post({ ...req.body });
 
     try {
         await post.save();
@@ -72,7 +70,6 @@ const getById = async (req, res) => {
 const updatePost = async (req, res) => {
     const { id } = req.params;
 
-    //TODO
     const update = {
         title: req.body.title,
         content: req.body.content,

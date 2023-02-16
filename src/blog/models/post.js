@@ -17,10 +17,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         default: uuidv4,
     },
-    // TODO
     owner: {
         type: String,
-        ref : "Profile",
+        required: true,
+        ref: "Profile",
     },
     title: {
         type: String,

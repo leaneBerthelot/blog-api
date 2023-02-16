@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-const authenticate = (req, res, next) => {
+const Account = require("../src/account/models/account");
+
+const authenticateMiddleware = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
         return res.status(401).json({ error: "Token is required" });
@@ -11,7 +13,13 @@ const authenticate = (req, res, next) => {
             return res.status(401).json({ error: "Invalid token" });
         }
 
-        req.id = decode.id;
+        const account = await Account.findOne({ id: decode.id }).exec();
+
+        if (!account) {
+            return res.status(404).json({ error: "Account not found" });
+        }
+
+        req.account = decode.id;
         req.email = decode.email;
 
         next();
@@ -20,4 +28,4 @@ const authenticate = (req, res, next) => {
     }
 };
 
-module.exports = authenticate;
+module.exports = authenticateMiddleware;
