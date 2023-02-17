@@ -16,7 +16,7 @@ const authenticateMiddleware = async (req, res, next) => {
         const account = await Account.findOne({ id: decode.id }).exec();
 
         if (!account) {
-            return res.status(404).json({ error: "Account not found" });
+            return res.status(404).json({ error: "Invalid token" });
         }
 
         req.account = decode.id;
