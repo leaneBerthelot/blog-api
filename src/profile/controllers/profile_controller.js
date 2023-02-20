@@ -52,7 +52,7 @@ const getProfilePosts = async (req, res) => {
     const count = await Post.find({ owner: req.profile.id }).count();
     const limit = 10;
     let page = !req.body.page ? 1 : req.body.page;
-    const totalPages = Math.ceil(count / limit) != 0 ? Math.ceil(count / limit) : 1;
+    const totalPages = Math.ceil(count / limit) !== 0 ? Math.ceil(count / limit) : 1;
     page = page > totalPages ? totalPages : page;
 
     const postes = await Post.find({ owner: req.profile.id })
@@ -72,7 +72,7 @@ const getProfileComments = async (req, res) => {
     const count = await Comment.find({ owner: req.profile.id }).count();
     const limit = 10;
     let page = !req.body.page ? 1 : req.body.page;
-    const totalPages = Math.ceil(count / limit) != 0 ? Math.ceil(count / limit) : 1;
+    const totalPages = Math.ceil(count / limit) !== 0 ? Math.ceil(count / limit) : 1;
     page = page > totalPages ? totalPages : page;
 
     const comments = await Comment.find({ owner: req.profile.id })

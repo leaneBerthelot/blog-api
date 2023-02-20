@@ -39,7 +39,7 @@ const ownerBodyMiddleware = function (req, res, next) {
 };
 
 const isOwnerMiddleware = async (req, res, next) => {
-    if (req.profile.owner != req.account) {
+    if (req.profile.owner !== req.account) {
         return res.status(401).json({ msg: "user is not the owner of the profile" });
     }
 
